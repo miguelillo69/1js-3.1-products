@@ -2,7 +2,7 @@
 
 const Category = require('./category.class');
 const Product = require('./product.class');
-//const data = require('./datosIni.json');
+const data = require('./datosIni.json');
 
 class Store {
 
@@ -11,6 +11,11 @@ class Store {
         this.name = name;
         this.products = [];
         this.categories = [];
+    }
+
+    loadData() {
+        data.categories.forEach(category => this.categories.push(new Category(category.id,category.name,category.description)));
+        data.products.forEach(product => this.products.push(new Product(product.id,product.name,product.category,product.price,product.units)));
     }
 
     getCategoryById(id) {
