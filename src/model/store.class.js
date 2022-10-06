@@ -75,7 +75,7 @@ class Store {
                 throw Error("Has añadido un valor no entero o decimal");
             }
         }
-
+        payload.category = parseInt(payload.category);
         if (!payload.category || !this.getCategoryById(payload.category)) {
             throw Error("No has añadido categoria o no existe");
         }
@@ -104,8 +104,7 @@ class Store {
     }
 
     totalImport() {
-        let totalImporteAlmacen = this.products.reduce(productImport());
-        return totalImporteAlmacen;
+        return this.products.reduce((total, prod) => total += prod.productImport(),0);
     }
 
     orderByUnitsDesc() {
