@@ -36,7 +36,7 @@ class View {
 
     renderSelect(category) {
         const categoryUI = document.createElement('option');
-        categoryUI.value = `${category.id}_category`;
+        categoryUI.value = category.id;
         categoryUI.id = `${category.id}_category`;
         categoryUI.innerHTML = category.name;
         const optionUI = document.querySelector('#new-prod select');
@@ -52,8 +52,11 @@ class View {
             </div>`;
         const messageUI = document.getElementById(`messages`);
         messageUI.appendChild(errorUI);
-    //alert(message);
+   
+        setTimeout(() => errorUI.remove(), 3000);
     }
+
+    
 }
 
 

@@ -16,7 +16,7 @@ window.addEventListener('load', () => {
     // Aquí el código para obtener los datos del formulario
     const name = document.getElementById('newprod-name').value
     const price = document.getElementById('newprod-price').value
-    const category = parseInt(document.getElementById('newprod-cat').value)
+    const category = Number(document.getElementById('newprod-cat').value)
     const units = Number(document.getElementById('newprod-units').value);
     // ...
 
