@@ -182,7 +182,7 @@ class Controller {
 
     botonesCategoria(payload) {
         const that = this;
-        const botonBorrarCat = document.getElementById(`botonRemove_${payload.id}`);
+        const botonBorrarCat = document.getElementById(`botonRemoveCat_${payload.id}`);
         botonBorrarCat.addEventListener('click', () => {
             that.deleteCategoryFromStore(payload.id);
         })

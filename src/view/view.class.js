@@ -110,7 +110,7 @@ ${this.renderBotonesCategory(category)}
 
     renderBotonesCategory(category) {
         return `<button value="${category.id}" id="botonEditar_${category.id}"><span class="material-icons-outlined">edit</span></button>
-<button value="${category.id}" id="botonRemove_${category.id}" style="background-color:red; color:white"><span class="material-icons-outlined">delete</span></button>`
+<button value="${category.id}" id="botonRemoveCat_${category.id}" style="background-color:red; color:white"><span class="material-icons-outlined">delete</span></button>`
     }
 
 }
