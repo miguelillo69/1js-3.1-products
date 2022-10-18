@@ -12,6 +12,7 @@ class Product {
 
     productImport() {
         return this.price * this.units;
+        
     }
 
     toString() {

@@ -9,39 +9,40 @@ myController.init();
 // A continuación crearemos una función manejadora para cada formulario
 window.addEventListener('load', () => {
 
-  // función manejadora del formulario 'new-prod'
   document.getElementById('new-prod').addEventListener('submit', (event) => {
     event.preventDefault()
 
-    // Aquí el código para obtener los datos del formulario
-    const name = document.getElementById('newprod-name').value
-    const price = document.getElementById('newprod-price').value
+    const id = Number(document.getElementById('newprod_id').value);
+    const name = document.getElementById('newprod-name').value;
+    const price = document.getElementById('newprod-price').value;
     const category = Number(document.getElementById('newprod-cat').value)
     const units = Number(document.getElementById('newprod-units').value);
-    // ...
-
-    // Aquí llamamos a la función del controlador que añade productos (addProductToStore)
-    // pasándole como parámetro esos datos
-    myController.addProductToStore({ name, price, category, units });
-    // Sintaxis de ES2015 que equivale a 
-    //
-    // myController.addProductToStore(
-    //   { 
-    //     name: name,
-    //     price: price 
-    //   }
-    // ) 
+    if (!id) {
+      myController.addProductToStore({ name, price, category, units });
+      myController.ocultarBotonesInit();
+      document.querySelector('.tablaProduct').classList.remove('oculto');
+      document.getElementById('buttonProductos').classList.add('active');
+    } else {
+      myController.editProductToStore({ id, name, price, category, units });
+      myController.ocultarBotonesInit();
+      document.querySelector('.tablaProduct').classList.remove('oculto');
+      document.getElementById('buttonProductos').classList.add('active');
+    }
   });
 
   document.getElementById('new-cat').addEventListener('submit', (event) => {
     event.preventDefault()
     const name = document.getElementById('newcat-name').value;
     const description = document.getElementById('newcat-description').value;
-
     myController.addCategoryToStore({ name, description });
+    myController.ocultarBotonesInit();
+    document.querySelector('.listCategory').classList.remove('oculto');
+    document.getElementById('buttonCategorias').classList.add('active');
   });
 
-  document.getElementById('del-prod').addEventListener('submit', (event) => {
+
+
+  /*document.getElementById('del-prod').addEventListener('submit', (event) => {
     event.preventDefault();
 
     const idProducto = Number(document.getElementById('delprod-id').value);
@@ -55,7 +56,9 @@ window.addEventListener('load', () => {
     const idCategoria = Number(document.getElementById('delcat-id').value);
 
     myController.deleteCategoryFromStore(idCategoria);
-  });
+  });*/
 
 
 });
+
+

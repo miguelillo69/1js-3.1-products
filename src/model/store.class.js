@@ -14,8 +14,8 @@ class Store {
     }
 
     loadData() {
-        data.categories.forEach(category => this.categories.push(new Category(category.id,category.name,category.description)));
-        data.products.forEach(product => this.products.push(new Product(product.id,product.name,product.category,product.price,product.units)));
+        data.categories.forEach(category => this.categories.push(new Category(category.id, category.name, category.description)));
+        data.products.forEach(product => this.products.push(new Product(product.id, product.name, product.category, product.price, product.units)));
     }
 
     getCategoryById(id) {
@@ -85,6 +85,31 @@ class Store {
         return newProducto;
     }
 
+    editProduct(payload) {
+        if (!payload.name) {
+            throw Error("No has añadido name");
+        }
+        if (!payload.price || payload.price < 0 || isNaN(payload.price)) {
+            throw Error("El precio no es correcto, o no lo has añadido");
+        }
+        if (payload.units) {
+            if (!Number.isInteger(payload.units) || payload.units < 0) {
+                throw Error("Has añadido un valor no entero o decimal");
+            }
+        }
+        payload.category = parseInt(payload.category);
+        if (!payload.category || !this.getCategoryById(payload.category)) {
+            throw Error("No has añadido categoria o no existe");
+        }
+        const productoModificado = this.getProductById(payload.id);
+        productoModificado.name = payload.name;
+        productoModificado.category = payload.category;
+        productoModificado.price = payload.price;
+        productoModificado.units = payload.units;
+        return productoModificado;
+
+    }
+
     delCategory(id) {
         this.getCategoryById(id);
         if (this.getProductsByCategory(id).length) {
@@ -99,12 +124,13 @@ class Store {
         if (productoBorrado.units !== 0) {
             throw "No se puede borrar el producto, al tener unidades";
         }
-        this.products.splice(this.products.id - 1, 1);
+        let prod = this.products.findIndex((elemento) => elemento.id === id);
+        this.products.splice(prod, 1);
         return productoBorrado;
     }
 
     totalImport() {
-        return this.products.reduce((total, prod) => total += prod.productImport(),0);
+        return this.products.reduce((total, prod) => total += prod.productImport(), 0);
     }
 
     orderByUnitsDesc() {
@@ -131,6 +157,21 @@ class Store {
     idNuevaMax(array) {
         let idMaxima = array.reduce((max, item) => item.id > max ? item.id : max, 0) + 1;
         return idMaxima;
+    }
+
+    subirProducto(id) {
+        const productoModificado = this.getProductById(id);
+        productoModificado.units++;
+        return productoModificado;
+    }
+
+    bajarProducto(id) {
+        const productoModificado = this.getProductById(id);
+        if (productoModificado.units <=0) {
+            throw "No hay unidades que borrar";
+        }
+        productoModificado.units--;
+        return productoModificado;
     }
 }
 
