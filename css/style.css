@@ -50,3 +50,7 @@ tbody {
 .oculto {
   display: none;
 }
+
+.error {
+  color: red;
+}

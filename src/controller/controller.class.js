@@ -10,7 +10,17 @@ class Controller {
         this.view = new View();
     }
 
+    formValid() {
+        const inputs = ["newprod-name", "newprod-name","newprod-name","newprod-name","newprod-name"]
+        inputs.forEach((inputId) => {
+            const input = document.getElementById(inputId);
+            input.nextElementSibling.textContent = input.validationMessage;
+        });
+        return(document.getElementById('').checkValidity());
+    }
+
     init() {
+
         this.botonesHeader();
         this.store.loadData();
         this.store.products.forEach(element => {
@@ -29,6 +39,7 @@ class Controller {
             this.view.renderBotonesCategory(element);
             this.botonesCategoria(element);
         });
+        this.eventosInicio();
         this.ocultarBotonesInit();
         document.querySelector('.tablaProduct').classList.remove('oculto');
         document.getElementById('buttonProductos').classList.add('active');
@@ -126,6 +137,8 @@ class Controller {
         });
         const botonEdit = document.getElementById(`botonEditar_${element.id}`);
         botonEdit.addEventListener('click', () => {
+            const nombreForm = document.getElementById('newprod-name');
+            const nombreFormError = nombreForm.nextElementSibling.textContent = null;
             that.view.prepararFormularioEditar(element);
             this.ocultarBotonesInit()
             document.querySelector('.newProduct').classList.remove('oculto');
@@ -152,6 +165,7 @@ class Controller {
 
         const botonAnyadirProducto = document.getElementById('buttonAñadirProducto');
         botonAnyadirProducto.addEventListener('click', () => {
+            this.eventosValidacionFormulario();
             this.ocultarBotonesInit();
             document.querySelector('.newProduct').classList.remove('oculto');
             document.getElementById('buttonAñadirProducto').classList.add('active');
@@ -200,6 +214,88 @@ class Controller {
         document.getElementById('buttonAñadirCategoria').classList.remove('active');
         document.getElementById('buttonSobreNosotros').classList.remove('active');
     }
+
+    eventosInicio() {
+        window.addEventListener('load', () => {
+
+            document.getElementById('new-prod').addEventListener('submit', (event) => {
+                event.preventDefault();
+
+                const id = Number(document.getElementById('newprod_id').value);
+                const name = document.getElementById('newprod-name').value;
+                const price = document.getElementById('newprod-price').value;
+                const category = Number(document.getElementById('newprod-cat').value);
+                const units = Number(document.getElementById('newprod-units').value);
+                if (!id) {
+                    this.addProductToStore({ name, price, category, units });
+                    this.ocultarBotonesInit();
+                    document.querySelector('.tablaProduct').classList.remove('oculto');
+                    document.getElementById('buttonProductos').classList.add('active');
+                } else {
+                    this.editProductToStore({ id, name, price, category, units });
+                    this.ocultarBotonesInit();
+                    document.querySelector('.tablaProduct').classList.remove('oculto');
+                    document.getElementById('buttonProductos').classList.add('active');
+                }
+            });
+
+            document.getElementById('new-cat').addEventListener('submit', (event) => {
+                event.preventDefault();
+                const name = document.getElementById('newcat-name').value;
+                const description = document.getElementById('newcat-description').value;
+                this.addCategoryToStore({ name, description });
+                this.ocultarBotonesInit();
+                document.querySelector('.listCategory').classList.remove('oculto');
+                document.getElementById('buttonCategorias').classList.add('active');
+            });
+        });
+    }
+
+    eventosValidacionFormulario() {
+        const nombreForm = document.getElementById('newprod-name');
+        nombreForm.addEventListener('blur', () => {
+            if (this.store.getProductByName(nombreForm.value)) {
+                nombreForm.setCustomValidity(`El producto \"${nombreForm.value}\" ya exixte`);
+            } else {
+                nombreForm.setCustomValidity('');
+            }
+            nombreForm.nextElementSibling.textContent = nombreForm.validationMessage;
+        });
+
+        const categoriaForm = document.getElementById('newprod-cat');
+        categoriaForm.addEventListener('blur', () => {
+            categoriaForm.nextElementSibling.textContent = categoriaForm.validationMessage;
+        });
+
+        const unitsForm = document.getElementById('newprod-units');
+        unitsForm.addEventListener('blur', () => {
+            unitsForm.nextElementSibling.textContent = unitsForm.validationMessage;
+        });
+
+        const priceForm = document.getElementById('newprod-price');
+        priceForm.addEventListener('blur', () => {
+            priceForm.nextElementSibling.textContent = priceForm.validationMessage;
+        });
+
+        const resetBotton = document.getElementById('resetProduct');
+        resetBotton.addEventListener('click', () => {
+            nombreForm.nextElementSibling.textContent = nombreForm.validationMessage;
+            categoriaForm.nextElementSibling.textContent = categoriaForm.validationMessage;
+            priceForm.nextElementSibling.textContent = priceForm.validationMessage;
+            unitsForm.nextElementSibling.textContent = unitsForm.validationMessage;
+        });
+
+        const submitBotton = document.getElementById('boton_añadir_modificar');
+        submitBotton.addEventListener('click', (event) => {
+            event.preventDefault();
+            nombreForm.nextElementSibling.textContent = nombreForm.validationMessage;
+            categoriaForm.nextElementSibling.textContent = categoriaForm.validationMessage;
+            priceForm.nextElementSibling.textContent = priceForm.validationMessage;
+            unitsForm.nextElementSibling.textContent = unitsForm.validationMessage;
+        })
+    }
+
+
 
 }
 module.exports = Controller;

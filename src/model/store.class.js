@@ -35,6 +35,14 @@ class Store {
         return nameCategoria;
     }
 
+    getProductByName(name) {
+        name = name.toLocaleLowerCase();
+        let nameProduct = this.products.find(producto => producto.name.toLocaleLowerCase() === name);
+        if (nameProduct) {
+            return true;
+        }
+    }
+
     getProductById(id) {
         let producto = this.products.find(producto => producto.id === id);
         if (!producto) {
