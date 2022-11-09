@@ -19,10 +19,9 @@ class Controller {
         return(document.getElementById('').checkValidity());
     }
 
-    init() {
-
+    async init() {
         this.botonesHeader();
-        this.store.loadData();
+        await this.store.loadData();
         this.store.products.forEach(element => {
             this.view.renderProduct(element);
             this.botonesPagina(element);
@@ -45,9 +44,9 @@ class Controller {
         document.getElementById('buttonProductos').classList.add('active');
     }
 
-    addProductToStore(formData) {
+    async addProductToStore(formData) {
         try {
-            const prod = this.store.addProduct(formData);
+            const prod = await this.store.addProduct(formData);
             this.view.renderProduct(prod);
             this.botonesPagina(prod);
             const botonDisabled = document.getElementById(`botonBajar_${prod.id}`);
@@ -92,9 +91,9 @@ class Controller {
         }
     }
 
-    addCategoryToStore(payload) {
+    async addCategoryToStore(payload) {
         try {
-            const cat = this.store.addCategory(payload.name, payload.descripcion);
+            const cat = await this.store.addCategory(payload.name, payload.descripcion);
             this.view.renderSelect(cat);
             this.view.renderCategory(cat);
             this.botonesCategoria(cat);
@@ -216,9 +215,7 @@ class Controller {
     }
 
     eventosInicio() {
-        window.addEventListener('load', () => {
-
-            document.getElementById('new-prod').addEventListener('submit', (event) => {
+                    document.getElementById('new-prod').addEventListener('submit', async(event) => {
                 event.preventDefault();
 
                 const id = Number(document.getElementById('newprod_id').value);
@@ -227,7 +224,7 @@ class Controller {
                 const category = Number(document.getElementById('newprod-cat').value);
                 const units = Number(document.getElementById('newprod-units').value);
                 if (!id) {
-                    this.addProductToStore({ name, price, category, units });
+                    await this.addProductToStore({ name, price, category, units });
                     this.ocultarBotonesInit();
                     document.querySelector('.tablaProduct').classList.remove('oculto');
                     document.getElementById('buttonProductos').classList.add('active');
@@ -248,13 +245,13 @@ class Controller {
                 document.querySelector('.listCategory').classList.remove('oculto');
                 document.getElementById('buttonCategorias').classList.add('active');
             });
-        });
+
     }
 
     eventosValidacionFormulario() {
         const nombreForm = document.getElementById('newprod-name');
-        nombreForm.addEventListener('blur', () => {
-            if (this.store.getProductByName(nombreForm.value)) {
+        nombreForm.addEventListener('blur', async() => {
+            if (await this.store.getProductByName(nombreForm.value)) {
                 nombreForm.setCustomValidity(`El producto \"${nombreForm.value}\" ya exixte`);
             } else {
                 nombreForm.setCustomValidity('');
@@ -287,7 +284,7 @@ class Controller {
 
         const submitBotton = document.getElementById('boton_añadir_modificar');
         submitBotton.addEventListener('click', (event) => {
-            event.preventDefault();
+         //   event.preventDefault();
             nombreForm.nextElementSibling.textContent = nombreForm.validationMessage;
             categoriaForm.nextElementSibling.textContent = categoriaForm.validationMessage;
             priceForm.nextElementSibling.textContent = priceForm.validationMessage;
